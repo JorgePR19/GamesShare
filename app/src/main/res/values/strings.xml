@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">GamesShare</string>
+    <string name="unknow_host_exepcion">unknow host exepcion</string>
+    <string name="unknow_error">unknow error</string>
+
+    <string name="validate_numbers">Debe contener al menos un número.</string>
+    <string name="validate_uppercase">Debe contener al menos una letra mayúscula.</string>
+    <string name="validate_special_character">Debe contener al menos un carácter especial.</string>
+    <string name="validate_three_numbers_in_sequence">No puede contener tres números consecutivos.</string>
 </resources>
