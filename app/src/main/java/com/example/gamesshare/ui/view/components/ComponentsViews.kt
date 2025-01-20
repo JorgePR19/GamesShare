@@ -1,9 +1,16 @@
 package com.example.gamesshare.ui.view.components
 
 import android.widget.Toast
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,17 +29,21 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -46,19 +57,31 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeOptions
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.gamesshare.R
+import com.example.gamesshare.ui.theme.gray8Color
+import com.example.gamesshare.ui.theme.gray9Color
 import com.example.gamesshare.ui.theme.roboto10Regular
 import com.example.gamesshare.ui.theme.roboto16Medium
 import com.example.gamesshare.ui.theme.roboto20Medium
-import com.example.gamesshare.ui.theme.text14Sp
+import com.example.gamesshare.ui.theme.roboto9Regular
+import com.example.gamesshare.ui.theme.rubik20sp
+import com.example.gamesshare.ui.theme.text36Sp
 import com.example.gamesshare.ui.view.screens.login.RegisterViewModel
+import com.example.gamesshare.utils.DimensDp
 
 @Composable
 fun WavesBackground(
@@ -160,7 +183,6 @@ fun GenericButton(title: String, isEnable: Boolean, onClick: () -> Unit) {
     }
 }
 
-
 @Composable
 fun TextWithArrow(text: String) {
     Row(
@@ -183,7 +205,6 @@ fun TextWithArrow(text: String) {
     }
 }
 
-//@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HeaderTextAndImage(titleText: String, modifier: Modifier) {
     ConstraintLayout(
@@ -208,7 +229,7 @@ fun HeaderTextAndImage(titleText: String, modifier: Modifier) {
 
         Text(
             titleText,
-            style = text14Sp,
+            style = text36Sp,
             modifier = Modifier.constrainAs(title) {
                 bottom.linkTo(image.bottom, margin = 16.dp)
                 end.linkTo(parent.end)
@@ -288,21 +309,20 @@ private fun getImage(status: Boolean): Int {
     return if (status) com.example.customtextfield.R.drawable.ic_success else com.example.customtextfield.R.drawable.ic_error
 }
 
-
 @Composable
 fun HeaderHomeInfo(imageUri: String, email: String, userName: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(135.dp)
-            .background(
-                Color(0x99000000), shape = RoundedCornerShape(
+            .clip(
+                RoundedCornerShape(
                     bottomStart = 16.dp,
                     bottomEnd = 16.dp
                 )
             )
+            .background(Color(0x99000000))
     ) {
-
         Row(
             modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
             verticalAlignment = Alignment.Bottom
@@ -345,10 +365,10 @@ fun HeaderHomeInfo(imageUri: String, email: String, userName: String) {
             }
             Spacer(modifier = Modifier.weight(1f))
             Row {
-                AddOptions(Icons.Outlined.Favorite, "Favoritos"){
+                AddOptions(Icons.Outlined.Favorite, "Favoritos") {
 
                 }
-                AddOptions(Icons.Outlined.Search, "Buscar"){
+                AddOptions(Icons.Outlined.Search, "Buscar") {
 
                 }
             }
@@ -373,5 +393,344 @@ private fun AddOptions(imageVector: ImageVector, nameString: String, onClick: ()
             )
         }
         Text(nameString, style = roboto10Regular, color = Color.White)
+    }
+}
+
+
+@Composable
+fun GridItemHomeScreen(
+    imageUri: String,
+    nameGame: String,
+    platForm: List<String>,
+    onClickShowVideo: () -> Unit
+) {
+
+    Card(
+        modifier = Modifier
+            .width(128.dp)
+            .height(200.dp)
+            .padding(vertical = 8.dp, horizontal = 4.dp)
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            GetImage(
+                imageUri,
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .background(Color(0x99000000))
+                    .padding(8.dp)
+            ) {
+                GetPlatformImage(platForm)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    nameGame,
+                    style = roboto10Regular,
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Transparent)
+                            .clickable { onClickShowVideo() }
+                            .clip(shape = RoundedCornerShape(16.dp))
+                            .border(
+                                1.dp,
+                                color = Color(0x99FAFAFA),
+                                shape = RoundedCornerShape(16.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "Mas datos",
+                            style = roboto9Regular,
+                            color = Color.White,
+                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 6.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GetPlatformImage(platforms: List<String>) {
+    val principalList = platforms
+        .distinctBy { it.substringBefore(" ") }.filter {
+            it.contains("PC")
+                    || it.contains("PlayStation")
+                    || it.contains("Xbox")
+                    || it.contains("Nintendo")
+                    || it.contains("Android")
+                    || it.contains("Apple")
+        }.take(3)
+
+    Row {
+        if (principalList.isNotEmpty()) {
+            principalList.forEach {
+                IconPlatform(it)
+                Spacer(modifier = Modifier.width(DimensDp.DP8))
+            }
+        } else IconPlatform("0")
+    }
+}
+
+
+@Composable
+private fun IconPlatform(platforms: String) {
+
+    val icon = when {
+        platforms.contains("PC") -> R.drawable.ic_pc
+        platforms.contains("PlayStation") -> R.drawable.ic_play
+        platforms.contains("Xbox") -> R.drawable.ic_xbox
+        platforms.contains("Nintendo") -> R.drawable.ic_nintendo
+        platforms.contains("Android") -> R.drawable.ic_android
+        platforms.contains("Apple") -> R.drawable.ic_apple
+        else -> R.drawable.ic_game_des
+    }
+
+    Image(
+        painter = painterResource(icon),
+        "",
+        modifier = Modifier.size(10.dp),
+        colorFilter = ColorFilter.tint(Color.White)
+    )
+}
+
+
+@Composable
+fun GetImage(imageUri: String, modifier: Modifier) {
+    SubcomposeAsyncImage(
+        model = imageUri,
+        contentDescription = "",
+        contentScale = ContentScale.Crop,
+        modifier = modifier, alignment = Alignment.Center
+    ) {
+        val state = painter.state
+        when (state) {
+            AsyncImagePainter.State.Empty -> Unit
+
+            is AsyncImagePainter.State.Error -> Unit
+
+            is AsyncImagePainter.State.Loading -> {
+                ShimmerEffectBox(
+                    modifier =
+                    Modifier
+                        .fillMaxSize()
+                )
+            }
+
+            is AsyncImagePainter.State.Success -> {
+                SubcomposeAsyncImageContent()
+            }
+        }
+    }
+}
+
+
+@Composable
+fun CardLessSkeleton() {
+    Card(
+        modifier = Modifier
+            .width(128.dp)
+            .height(200.dp)
+            .padding(vertical = 8.dp, horizontal = 4.dp)
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            ShimmerEffectBox(
+                modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
+            HorizontalDivider(
+                modifier = Modifier
+                    .height(1.dp)
+                    .fillMaxWidth()
+                    .background(Color.Black)
+            )
+            ShimmerEffectBox(
+                modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun ShimmerEffectBox(
+    modifier: Modifier = Modifier
+) {
+
+    val shimmerColors = listOf(
+        gray8Color,
+        gray9Color
+    )
+
+    val transition = rememberInfiniteTransition(label = "")
+
+    val animatedColor by transition.animateColor(
+        initialValue = shimmerColors[0],
+        targetValue = shimmerColors[1],
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000, delayMillis = 200),
+            repeatMode = RepeatMode.Reverse
+        ), label = ""
+    )
+
+    Box(
+        modifier = modifier.background(animatedColor)
+    )
+}
+
+@Composable
+fun ComposableLifeCycle(
+    lifeCycle: LifecycleOwner = LocalLifecycleOwner.current,
+    onEvent: (LifecycleOwner, Lifecycle.Event) -> Unit
+) {
+    DisposableEffect(key1 = lifeCycle) {
+        val observer = LifecycleEventObserver { source, event ->
+            onEvent(source, event)
+        }
+
+        lifeCycle.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifeCycle.lifecycle.removeObserver(observer)
+        }
+    }
+}
+
+@Composable
+fun MainImage(image: String, modifier: Modifier) {
+    val newImage = rememberImagePainter(data = image)
+
+    Image(
+        painter = newImage, contentDescription = "",
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(250.dp)
+            .clip(RoundedCornerShape(16.dp))
+    )
+}
+
+
+@Composable
+fun HeaderDetail(gameGame: String, navController: NavController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp)
+            .clip(
+                RoundedCornerShape(
+                    bottomStart = 16.dp,
+                    bottomEnd = 16.dp
+                )
+            )
+            .background(Color(0x99000000))
+            .padding(vertical = 16.dp , horizontal = 8.dp),
+        contentAlignment = Alignment.BottomCenter,
+    ) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = {navController.popBackStack()}) {
+                Icon(imageVector = Icons.Default.ArrowBack, "", tint = Color.White)
+            }
+            Text(
+                gameGame,
+                style = rubik20sp,
+                color = Color.White,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Start
+            )
+        }
+    }
+}
+
+enum class QualityMovies {
+    High, Low
+}
+
+//@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ListMoviesItems(imageUri: String, nameGame: String, showVide: (QualityMovies) -> Unit) {
+    val newImage = rememberAsyncImagePainter(model = imageUri)
+    Row(
+        modifier = Modifier
+            .height(88.dp)
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Image(
+            painter = newImage, contentDescription = "",
+            modifier = Modifier
+                .size(50.dp)
+                .clip(RoundedCornerShape(16.dp)),
+            contentScale = ContentScale.Crop,
+        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                nameGame,
+                style = roboto16Medium,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                GenericButtonOutLine("low quality") {
+                    showVide(QualityMovies.Low)
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                GenericButtonOutLine("high quality") {
+                    showVide(QualityMovies.High)
+                }
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            HorizontalDivider(
+                modifier = Modifier
+                    .height(1.dp)
+                    .fillMaxWidth()
+                    .background(Color.Black)
+            )
+        }
+    }
+}
+
+@Composable
+private fun GenericButtonOutLine(text: String, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .background(Color.Transparent)
+            .clickable { onClick() }
+            .clip(shape = RoundedCornerShape(16.dp))
+            .border(
+                1.dp,
+                color = Color(0x99000000),
+                shape = RoundedCornerShape(16.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text,
+            style = roboto9Regular,
+            modifier = Modifier.padding(vertical = 4.dp, horizontal = 6.dp)
+        )
     }
 }

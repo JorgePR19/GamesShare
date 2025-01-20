@@ -11,3 +11,6 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val LoaderAlphaColor = Color(0xE6E2E2E2)
+
+val gray8Color = Color(0x99787373)
+val gray9Color = Color(0x994E4D4D)

@@ -1,32 +1,18 @@
 package com.example.gamesshare.ui.theme
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.customtextfield.ui.ui.theme.dimens.DimensSp.Sp10
-import com.example.customtextfield.ui.ui.theme.dimens.DimensSp.Sp14
-import com.example.customtextfield.ui.ui.theme.dimens.DimensSp.Sp16
-import com.example.customtextfield.ui.ui.theme.dimens.DimensSp.Sp24
 import com.example.gamesshare.R
 
 private val fontFamily = FontFamily(
     Font(R.font.rubik_vinyl_regular, FontWeight.Normal),
 )
 
-val ButtonStyle = TextStyle(
-    color = Color.White,
-    fontFamily = fontFamily,
-    fontWeight = FontWeight.Normal,
-    fontSize = 14.sp,
-    fontStyle = FontStyle.Normal
-)
-
-var text14Sp = TextStyle(
+var text36Sp = TextStyle(
     fontSize = 36.sp,
     fontWeight = FontWeight.Normal,
     fontFamily = fontFamily,
@@ -34,6 +20,13 @@ var text14Sp = TextStyle(
 )
 var textLoader = TextStyle(
     fontSize = 18.sp,
+    fontWeight = FontWeight.Normal,
+    fontFamily = fontFamily,
+    lineHeight = 16.sp
+)
+
+var rubik20sp = TextStyle(
+    fontSize = 20.sp,
     fontWeight = FontWeight.Normal,
     fontFamily = fontFamily,
     lineHeight = 16.sp
@@ -83,6 +76,13 @@ var roboto14Regular = TextStyle(
 )
 var roboto10Regular = TextStyle(
     fontSize = 10.sp,
+    fontWeight = FontWeight.Normal,
+    fontFamily = robotoFontFamily,
+    lineHeight = 16.sp
+)
+
+var roboto9Regular = TextStyle(
+    fontSize = 8.sp,
     fontWeight = FontWeight.Normal,
     fontFamily = robotoFontFamily,
     lineHeight = 16.sp

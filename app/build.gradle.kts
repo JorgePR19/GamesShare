@@ -108,5 +108,21 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
     implementation("androidx.compose.runtime:runtime-livedata:1.7.5")
 
+    // Retrofit
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.4.0")
+
+    //paging 3
+    implementation("androidx.paging:paging-runtime-ktx:3.3.2")
+    implementation("androidx.paging:paging-compose:3.3.2")
+
+    //video
+    implementation("androidx.media3:media3-exoplayer:1.5.0")
+    implementation("androidx.media3:media3-exoplayer-dash:1.5.0")
+    implementation("androidx.media3:media3-ui:1.5.0")
+
+    implementation("androidx.media3:media3-session:1.5.0") // [Required] MediaSession Extension dependency
+    implementation("androidx.media3:media3-exoplayer-hls:1.5.0") // [Optional] If your media item is HLS (m3u8..)
+    implementation("androidx.media3:media3-exoplayer-smoothstreaming:1.5.0") // [Optional] If your media item is smoothStreaming
 
 }
