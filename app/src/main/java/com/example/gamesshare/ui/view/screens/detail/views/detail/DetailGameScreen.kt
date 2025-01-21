@@ -85,20 +85,23 @@ fun DetailGameScreen(
         when (stateUI) {
             StatusUI.Await -> Unit
             StatusUI.Error -> {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        "Error Al cargar los datos",
-                        style = rubik20sp,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    GenericButton("Reintentar", true) {
-                        viewModel.resetFetchData()
+                Column(modifier = Modifier.fillMaxSize()) {
+                    HeaderDetail("Error!!", navController = navController)
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            "Error Al cargar los datos",
+                            style = rubik20sp,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        GenericButton("Reintentar", true) {
+                            viewModel.resetFetchData()
+                        }
                     }
                 }
             }
