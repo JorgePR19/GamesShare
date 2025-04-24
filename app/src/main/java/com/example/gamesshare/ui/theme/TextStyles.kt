@@ -1,32 +1,18 @@
 package com.example.gamesshare.ui.theme
 
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.customtextfield.ui.ui.theme.dimens.DimensSp.Sp10
-import com.example.customtextfield.ui.ui.theme.dimens.DimensSp.Sp14
-import com.example.customtextfield.ui.ui.theme.dimens.DimensSp.Sp16
-import com.example.customtextfield.ui.ui.theme.dimens.DimensSp.Sp24
 import com.example.gamesshare.R
 
 private val fontFamily = FontFamily(
     Font(R.font.rubik_vinyl_regular, FontWeight.Normal),
 )
 
-val ButtonStyle = TextStyle(
-    color = Color.White,
-    fontFamily = fontFamily,
-    fontWeight = FontWeight.Normal,
-    fontSize = 14.sp,
-    fontStyle = FontStyle.Normal
-)
-
-var text14Sp = TextStyle(
+var text36Sp = TextStyle(
     fontSize = 36.sp,
     fontWeight = FontWeight.Normal,
     fontFamily = fontFamily,
@@ -37,6 +23,19 @@ var textLoader = TextStyle(
     fontWeight = FontWeight.Normal,
     fontFamily = fontFamily,
     lineHeight = 16.sp
+)
+var rubik14sp = TextStyle(
+    fontSize = 10.sp,
+    fontWeight = FontWeight.Normal,
+    fontFamily = fontFamily,
+    lineHeight = 16.sp
+)
+
+var rubik20sp = TextStyle(
+    fontSize = 20.sp,
+    fontWeight = FontWeight.Normal,
+    fontFamily = fontFamily,
+    lineHeight = 18.sp
 )
 
 
@@ -55,17 +54,22 @@ var roboto16Medium = TextStyle(
     fontFamily = robotoFontFamily,
     fontWeight = FontWeight.Medium,
 )
-var roboto18Medium = TextStyle(
-    fontSize = 18.sp,
+var roboto14Medium = TextStyle(
+    fontSize = 14.sp,
     lineHeight = 24.sp,
     fontFamily = robotoFontFamily,
     fontWeight = FontWeight.Medium,
 )
-var roboto10Medium = TextStyle(
-    fontSize = 10.sp,
-    lineHeight = 16.sp,
+var roboto14Bold = TextStyle(
+    fontSize = 14.sp,
+    lineHeight = 24.sp,
     fontFamily = robotoFontFamily,
-    fontWeight = FontWeight.Medium,
+    fontWeight = FontWeight.Bold,
+)
+var roboto10Light = TextStyle(
+    fontSize = 10.sp,
+    fontFamily = robotoFontFamily,
+    fontWeight = FontWeight.Light,
     platformStyle = PlatformTextStyle(includeFontPadding = false)
 )
 var roboto20Medium = TextStyle(
@@ -75,8 +79,29 @@ var roboto20Medium = TextStyle(
     lineHeight = 24.sp,
     platformStyle = PlatformTextStyle(includeFontPadding = false)
 )
+var roboto10Medium = TextStyle(
+    fontSize = 10.sp,
+    fontWeight = FontWeight.Medium,
+    fontFamily = robotoFontFamily,
+    lineHeight = 24.sp,
+    platformStyle = PlatformTextStyle(includeFontPadding = false)
+)
+var roboto20Bold = TextStyle(
+    fontSize = 20.sp,
+    fontWeight = FontWeight.Bold,
+    fontFamily = robotoFontFamily,
+    lineHeight = 24.sp,
+    platformStyle = PlatformTextStyle(includeFontPadding = false)
+)
 var roboto14Regular = TextStyle(
     fontSize = 14.sp,
+    fontWeight = FontWeight.Normal,
+    fontFamily = robotoFontFamily,
+    lineHeight = 16.sp,
+    platformStyle = PlatformTextStyle(includeFontPadding = false)
+)
+var roboto20Regular = TextStyle(
+    fontSize = 20.sp,
     fontWeight = FontWeight.Normal,
     fontFamily = robotoFontFamily,
     lineHeight = 16.sp
@@ -84,6 +109,19 @@ var roboto14Regular = TextStyle(
 var roboto10Regular = TextStyle(
     fontSize = 10.sp,
     fontWeight = FontWeight.Normal,
+    fontFamily = robotoFontFamily,
+    lineHeight = 16.sp
+)
+
+var roboto9Regular = TextStyle(
+    fontSize = 8.sp,
+    fontWeight = FontWeight.Normal,
+    fontFamily = robotoFontFamily,
+    lineHeight = 16.sp
+)
+var roboto8Light = TextStyle(
+    fontSize = 8.sp,
+    fontWeight = FontWeight.Light,
     fontFamily = robotoFontFamily,
     lineHeight = 16.sp
 )
