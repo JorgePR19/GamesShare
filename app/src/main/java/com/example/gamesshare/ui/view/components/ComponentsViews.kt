@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,15 +25,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.FormatColorText
+import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.rounded.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -43,22 +47,35 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.Lifecycle
@@ -74,21 +91,31 @@ import coil.compose.rememberImagePainter
 import com.example.gamesshare.R
 import com.example.gamesshare.ui.theme.gray8Color
 import com.example.gamesshare.ui.theme.gray9Color
+import com.example.gamesshare.ui.theme.roboto10Medium
 import com.example.gamesshare.ui.theme.roboto10Regular
+import com.example.gamesshare.ui.theme.roboto14Bold
+import com.example.gamesshare.ui.theme.roboto14Regular
 import com.example.gamesshare.ui.theme.roboto16Medium
 import com.example.gamesshare.ui.theme.roboto20Medium
+import com.example.gamesshare.ui.theme.roboto8Light
 import com.example.gamesshare.ui.theme.roboto9Regular
+import com.example.gamesshare.ui.theme.rubik14sp
 import com.example.gamesshare.ui.theme.rubik20sp
 import com.example.gamesshare.ui.theme.text36Sp
 import com.example.gamesshare.ui.view.screens.login.RegisterViewModel
 import com.example.gamesshare.utils.DimensDp
+import com.example.gamesshare.utils.replaceDate
+import kotlinx.coroutines.Delay
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun WavesBackground(
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         Box(
@@ -147,22 +174,21 @@ fun WavesBackground(
 }
 
 @Composable
-fun IndicationPage(pageCount: Int, currentPage: Int, modifier: Modifier) {
+fun IndicationPage(pageCount: Int, currentPage: Int, modifier: Modifier, size: Dp = 12.dp) {
     Row(
         modifier = modifier
             .wrapContentHeight()
-            .fillMaxWidth()
-            .padding(bottom = 16.dp, top = 16.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
         repeat(pageCount) { iteration ->
-            val color = if (currentPage == iteration) Color.DarkGray else Color.White
+            val color = if (currentPage == iteration) Color.Gray else Color.White
             Box(
                 modifier = Modifier
                     .padding(2.dp)
                     .clip(CircleShape)
                     .background(color)
-                    .size(12.dp)
+                    .size(size)
             )
         }
     }
@@ -309,67 +335,82 @@ private fun getImage(status: Boolean): Int {
     return if (status) com.example.customtextfield.R.drawable.ic_success else com.example.customtextfield.R.drawable.ic_error
 }
 
+
+@Composable
+private fun GenericHeader(modifier: Modifier, content: @Composable () -> Unit) {
+    val statusBarHeight = LocalDensity.current.run {
+        WindowInsets.systemBars.getTop(this).toDp()
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color(0x99AFADAD))
+    ) {
+        Box(
+            modifier = Modifier
+                .clip(
+                    RoundedCornerShape(
+                        bottomStart = 16.dp,
+                        bottomEnd = 16.dp
+                    )
+                )
+                .background(Color(0x99000000))
+                .padding(top = statusBarHeight, end = 8.dp)
+        ) {
+            content()
+        }
+    }
+}
+
 @Composable
 fun HeaderHomeInfo(imageUri: String, email: String, userName: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(135.dp)
-            .clip(
-                RoundedCornerShape(
-                    bottomStart = 16.dp,
-                    bottomEnd = 16.dp
-                )
-            )
-            .background(Color(0x99000000))
-    ) {
-        Row(
-            modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
-            verticalAlignment = Alignment.Bottom
+    GenericHeader(modifier = Modifier.height(135.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
         ) {
-            Column {
-                Text(
-                    "Bienvenido",
-                    style = roboto20Medium,
-                    color = Color.White,
-                    modifier = Modifier.padding(8.dp)
-                )
-                Row(
-                    modifier = Modifier
-                        .height(50.dp)
-                        .padding(horizontal = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (imageUri.isNotEmpty()) {
-                        CoilImage(
-                            imageUri,
-                            modifier = Modifier.size(50.dp)
-                        )
-                    }
-                    Column {
-                        Text(
-                            userName,
-                            style = roboto16Medium,
-                            color = Color.White,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            email,
-                            style = roboto10Regular,
-                            color = Color.White,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
+            Text(
+                "Bienvenido",
+                style = roboto20Medium,
+                color = Color.White,
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (imageUri.isNotEmpty()) {
+                    CoilImage(
+                        imageUri,
+                        modifier = Modifier.size(50.dp)
+                    )
                 }
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Row {
-                AddOptions(Icons.Outlined.Favorite, "Favoritos") {
-
+                Column {
+                    Text(
+                        userName,
+                        style = roboto16Medium,
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        email,
+                        style = roboto10Regular,
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
                 }
-                AddOptions(Icons.Outlined.Search, "Buscar") {
+                Spacer(modifier = Modifier.weight(1f))
+                Row {
+                    AddOptions(Icons.Outlined.Favorite, "Favoritos") {
 
+                    }
+                    AddOptions(Icons.Rounded.Search, "Buscar") {
+
+                    }
                 }
             }
         }
@@ -379,7 +420,7 @@ fun HeaderHomeInfo(imageUri: String, email: String, userName: String) {
 @Composable
 private fun AddOptions(imageVector: ImageVector, nameString: String, onClick: () -> Unit) {
     Column(
-        modifier = Modifier.padding(end = 16.dp),
+        modifier = Modifier.padding(start = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -627,30 +668,32 @@ fun MainImage(image: String, modifier: Modifier) {
     )
 }
 
-
 @Composable
 fun HeaderDetail(gameGame: String, navController: NavController) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(120.dp)
-            .clip(
-                RoundedCornerShape(
-                    bottomStart = 16.dp,
-                    bottomEnd = 16.dp
-                )
-            )
-            .background(Color(0x99000000))
-            .padding(vertical = 16.dp , horizontal = 8.dp),
-        contentAlignment = Alignment.BottomCenter,
-    ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = {navController.popBackStack()}) {
-                Icon(imageVector = Icons.Default.ArrowBack, "", tint = Color.White)
+    val scope = rememberCoroutineScope()
+    var navigation by rememberSaveable { mutableStateOf(true) }
+
+    GenericHeader(modifier = Modifier.wrapContentHeight()) {
+        Row(
+            modifier = Modifier
+                .background(Color.Transparent),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+            IconButton(onClick = {
+                if(navigation) navController.popBackStack()
+                navigation = false
+                scope.launch {
+                    delay(1000)
+                    navigation = true
+                }
+            }) {
+                Icon(imageVector = Icons.Rounded.ArrowBackIosNew, "", tint = Color.White)
             }
             Text(
                 gameGame,
-                style = rubik20sp,
+                style = roboto20Medium,
                 color = Color.White,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -734,3 +777,194 @@ private fun GenericButtonOutLine(text: String, onClick: () -> Unit) {
         )
     }
 }
+
+
+@Composable
+fun ItemCommentsView(image: String, userName: String, comment: String, date: String) {
+    val newDate = replaceDate(date).replace("am", "a.m.").replace("pm", "p.m.")
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        Row(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), Arrangement.Center) {
+            CoilImage(image, Modifier.size(35.dp))
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                BoxBackGround(
+                    modifier = Modifier.padding(start = 8.dp),
+                    contentColor = Color(0xFFeeeff4)
+                ) {
+                    Column(modifier = Modifier.padding(8.dp)) {
+                        Text(
+                            userName,
+                            style = roboto14Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            color = Color(0xFF746464)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            comment,
+                            style = roboto14Regular,
+                            textAlign = TextAlign.Left,
+                            color = Color.DarkGray
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(newDate, style = roboto10Regular, color = Color(0xFF746464))
+            }
+        }
+    }
+}
+
+@Composable
+fun BoxBackGround(
+    modifier: Modifier,
+    contentColor: Color = Color(0x802F2A2A),
+    content: @Composable () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))// Ancho completo
+            .background(contentColor)
+    ) {
+        content()
+    }
+}
+
+//+-----------
+@Composable
+fun CircularPercentageIndicator(
+    percentage: Double, // Ahora acepta Double
+    modifier: Modifier = Modifier,
+) {
+    Canvas(modifier = modifier.size(40.dp)) {
+        val canvasSize = 40.dp.toPx()
+        val radius = canvasSize / 2
+        val stroke = 4.dp.toPx()
+
+        // Dibujar fondo del círculo
+        drawCircle(
+            color = Color(0xCCA1A1A1),
+            radius = radius - stroke / 2,
+            style = Stroke(width = stroke, cap = StrokeCap.Round)
+        )
+
+        // Dibujar progreso
+        drawArc(
+            color = Color(0xFF4CAF50),
+            startAngle = -90f,
+            sweepAngle = 360 * (percentage / 100).toFloat(), // Convertir Double a Float
+            useCenter = false,
+            style = Stroke(width = stroke, cap = StrokeCap.Round),
+            topLeft = Offset(stroke / 2, stroke / 2),
+            size = Size(canvasSize - stroke, canvasSize - stroke)
+        )
+    }
+}
+
+
+@Composable
+fun CircularIndicatorDemo(percentage: Double, modifier: Modifier) {
+    ConstraintLayout(modifier = modifier) {
+        val (cicle, precent) = createRefs()
+        CircularPercentageIndicator(
+            percentage = percentage,
+            modifier = Modifier.constrainAs(cicle) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+            }
+        )
+
+        Text(
+            percentage.toString(),
+            style = roboto10Medium,
+            modifier = Modifier.constrainAs(precent) {
+                start.linkTo(cicle.start)
+                end.linkTo(cicle.end)
+                top.linkTo(cicle.top)
+                bottom.linkTo(cicle.bottom)
+            })
+    }
+}
+
+
+@Composable
+fun MetaCriticComposeView(metacritic: Int, modifier: Modifier) {
+    BoxBackGround(
+        modifier = modifier
+            .height(70.dp)
+            .width(60.dp),
+        contentColor = Color(0xE64CAF50)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("$metacritic", style = roboto16Medium, color = Color.White)
+            Spacer(modifier = Modifier.height(2.dp))
+            Text("MetaScore", style = roboto10Medium, color = Color.White)
+        }
+    }
+}
+
+//@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ContentFastActions(
+    modifier: Modifier,
+    showTrailer: Boolean,
+    action: (TypesFastActions) -> Unit
+) {
+    BoxBackGround(
+        modifier = modifier
+            .wrapContentHeight()
+            .width(50.dp)
+    ) {
+        Column(
+            modifier = Modifier,
+            //.fillMaxSize()
+            //.padding(vertical = 4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
+            if (showTrailer) {
+                ImageAndTextActions(image = Icons.Outlined.PlayArrow, "Trailers") {
+                    action(TypesFastActions.TRAILERS)
+                }
+            }
+            ImageAndTextActions(image = Icons.Outlined.FormatColorText, "Details") {
+                action(TypesFastActions.DETAILS)
+            }
+            ImageAndTextActions(image = Icons.Outlined.Comment, "Comments") {
+                action(TypesFastActions.COMMENTS)
+            }
+
+        }
+    }
+}
+
+
+@Composable
+private fun ImageAndTextActions(image: ImageVector, text: String, action: () -> Unit) {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.height(8.dp))
+        Icon(imageVector = image, "",
+            tint = Color.White,
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable { action() })
+        Spacer(modifier = Modifier.height(1.dp))
+        Text(text, style = roboto8Light, color = Color.White)
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+}
+
+enum class TypesFastActions {
+    COMMENTS, DETAILS, TRAILERS
+}
+

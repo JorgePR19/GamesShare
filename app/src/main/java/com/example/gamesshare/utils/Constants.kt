@@ -4,6 +4,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 
 object Constants {
     const val FIRE_STORE_NAME_COLLECTION = "Users"
+    const val FIRE_STORE_COMMENTS_COLLECTION = "Comments"
 
     //dataStore
     val USER_EMAIL = stringPreferencesKey("Email")

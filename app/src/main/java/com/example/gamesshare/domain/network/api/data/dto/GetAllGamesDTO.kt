@@ -8,11 +8,13 @@ data class GameListDTO(
     @SerializedName("id") val idGame: Int,
     @SerializedName("name") val nameGame: String,
     @SerializedName("background_image") val backgroundImage: String,
-    @SerializedName("rating") val ratingGlobal: Double,
+    @SerializedName("metacritic") val metacritic: Int,
     @SerializedName("rating_top") val top: Int,
     @SerializedName("ratings") val ratings: List<RatingsValuesDTO>,
     @SerializedName("slug") val slug: String,
-    @SerializedName("platforms") val platforms: List<PlatformWrapperDTO>
+    @SerializedName("parent_platforms") val platforms: List<PlatformWrapperDTO>,
+    @SerializedName("platforms") val allPlatforms: List<PlatformWrapperDTO>,
+    @SerializedName("short_screenshots") val short_screenshots: List<ShortScreenShots>
 )
 
 data class RatingsValuesDTO(
@@ -24,6 +26,11 @@ data class RatingsValuesDTO(
 data class PlatformWrapperDTO(
     @SerializedName("platform") val platform: PlatformDTO
 )
+
 data class PlatformDTO(
     @SerializedName("name") val name: String,
+)
+
+data class ShortScreenShots(
+    @SerializedName("image") val image: String
 )

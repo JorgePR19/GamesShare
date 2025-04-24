@@ -27,22 +27,11 @@ fun GetGamesObserver(
                 eventUi(StatusUI.Error)
                 DsLoaderView.dismissLoader()
             }
-            StatusClass.Loading ->Unit
-            StatusClass.Success -> eventUi(StatusUI.Success)
-        }
-    }
-}
 
-@Composable
-fun GetMoviesObserver(state: ResponseStatus<List<GameMovieModel>>?) {
-    if (state != null) {
-        when (state.status) {
-            StatusClass.Error -> {
-                DsLoaderView.dismissLoader()
-            }
             StatusClass.Loading -> Unit
             StatusClass.Success -> {
                 DsLoaderView.dismissLoader()
+                eventUi(StatusUI.Success)
             }
         }
     }

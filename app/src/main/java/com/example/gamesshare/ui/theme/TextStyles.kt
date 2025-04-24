@@ -24,12 +24,18 @@ var textLoader = TextStyle(
     fontFamily = fontFamily,
     lineHeight = 16.sp
 )
+var rubik14sp = TextStyle(
+    fontSize = 10.sp,
+    fontWeight = FontWeight.Normal,
+    fontFamily = fontFamily,
+    lineHeight = 16.sp
+)
 
 var rubik20sp = TextStyle(
     fontSize = 20.sp,
     fontWeight = FontWeight.Normal,
     fontFamily = fontFamily,
-    lineHeight = 16.sp
+    lineHeight = 18.sp
 )
 
 
@@ -48,17 +54,22 @@ var roboto16Medium = TextStyle(
     fontFamily = robotoFontFamily,
     fontWeight = FontWeight.Medium,
 )
-var roboto18Medium = TextStyle(
-    fontSize = 18.sp,
+var roboto14Medium = TextStyle(
+    fontSize = 14.sp,
     lineHeight = 24.sp,
     fontFamily = robotoFontFamily,
     fontWeight = FontWeight.Medium,
 )
-var roboto10Medium = TextStyle(
-    fontSize = 10.sp,
-    lineHeight = 16.sp,
+var roboto14Bold = TextStyle(
+    fontSize = 14.sp,
+    lineHeight = 24.sp,
     fontFamily = robotoFontFamily,
-    fontWeight = FontWeight.Medium,
+    fontWeight = FontWeight.Bold,
+)
+var roboto10Light = TextStyle(
+    fontSize = 10.sp,
+    fontFamily = robotoFontFamily,
+    fontWeight = FontWeight.Light,
     platformStyle = PlatformTextStyle(includeFontPadding = false)
 )
 var roboto20Medium = TextStyle(
@@ -68,8 +79,29 @@ var roboto20Medium = TextStyle(
     lineHeight = 24.sp,
     platformStyle = PlatformTextStyle(includeFontPadding = false)
 )
+var roboto10Medium = TextStyle(
+    fontSize = 10.sp,
+    fontWeight = FontWeight.Medium,
+    fontFamily = robotoFontFamily,
+    lineHeight = 24.sp,
+    platformStyle = PlatformTextStyle(includeFontPadding = false)
+)
+var roboto20Bold = TextStyle(
+    fontSize = 20.sp,
+    fontWeight = FontWeight.Bold,
+    fontFamily = robotoFontFamily,
+    lineHeight = 24.sp,
+    platformStyle = PlatformTextStyle(includeFontPadding = false)
+)
 var roboto14Regular = TextStyle(
     fontSize = 14.sp,
+    fontWeight = FontWeight.Normal,
+    fontFamily = robotoFontFamily,
+    lineHeight = 16.sp,
+    platformStyle = PlatformTextStyle(includeFontPadding = false)
+)
+var roboto20Regular = TextStyle(
+    fontSize = 20.sp,
     fontWeight = FontWeight.Normal,
     fontFamily = robotoFontFamily,
     lineHeight = 16.sp
@@ -84,6 +116,12 @@ var roboto10Regular = TextStyle(
 var roboto9Regular = TextStyle(
     fontSize = 8.sp,
     fontWeight = FontWeight.Normal,
+    fontFamily = robotoFontFamily,
+    lineHeight = 16.sp
+)
+var roboto8Light = TextStyle(
+    fontSize = 8.sp,
+    fontWeight = FontWeight.Light,
     fontFamily = robotoFontFamily,
     lineHeight = 16.sp
 )

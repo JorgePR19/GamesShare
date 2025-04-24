@@ -10,7 +10,10 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +39,7 @@ import com.example.gamesshare.ui.view.components.GridItemHomeScreen
 import com.example.gamesshare.ui.view.components.HeaderHomeInfo
 import com.example.gamesshare.ui.view.components.WavesBackground
 
+
 @Composable
 fun HomeScreen(
     sharePreferenceViewModel: SharePreferenceViewModel,
@@ -46,22 +50,17 @@ fun HomeScreen(
     val userName = sharePreferenceViewModel.userName.collectAsState("")
     val userImage = sharePreferenceViewModel.userImage.collectAsState("")
 
-    WavesBackground {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            HeaderHomeInfo(
-                imageUri = userImage.value,
-                userName = userName.value,
-                email = email.value
-            )
-
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+        HeaderHomeInfo(
+            imageUri = userImage.value,
+            userName = userName.value,
+            email = email.value
+        )
+    }) { paddingValues ->
+        WavesBackground(modifier = Modifier.padding(paddingValues)) {
             PagingItems(
                 modifier = Modifier
-                    .weight(1f)
+                    .fillMaxSize()
                     .padding(top = 4.dp),
                 homeViewModel = homeViewModel,
                 onClickShowMovie = {
@@ -85,21 +84,21 @@ fun PagingItems(
     LazyVerticalGrid(
         modifier = modifier,
         state = lazyListState,
-        columns = GridCells.Adaptive(minSize = 128.dp),
+        columns = GridCells.Fixed(3),
     ) {
         if (lazyPagingItems.itemCount > 0) {
-             items(lazyPagingItems.itemCount) {
+            items(lazyPagingItems.itemCount) {
                 val itemsPag = lazyPagingItems[it]
-                 if (itemsPag != null) {
-                GridItemHomeScreen(
-                    itemsPag.backgroundImage,
-                    itemsPag.gameName,
-                    itemsPag.platforms,
-                    onClickShowVideo = {
-                        onClickShowMovie(itemsPag)
-                    }
-                )
-                  }
+                if (itemsPag != null) {
+                    GridItemHomeScreen(
+                        itemsPag.backgroundImage,
+                        itemsPag.gameName,
+                        itemsPag.platforms,
+                        onClickShowVideo = {
+                            onClickShowMovie(itemsPag)
+                        }
+                    )
+                }
             }
 
             when (lazyPagingItems.loadState.append) {

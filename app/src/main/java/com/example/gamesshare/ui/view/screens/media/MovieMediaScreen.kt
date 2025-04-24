@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.PlayArrow
+import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -122,7 +123,7 @@ fun HomeMovieMediaScreen(uri: String, viewModel: MovieMediaViewModel = hiltViewM
             contentColor = Color.DarkGray
         )
         ) {
-            Icon(imageVector = Icons.Outlined.ArrowBack, null)
+            Icon(imageVector = Icons.Rounded.ArrowBackIosNew, null)
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.gamesshare.domain.network.api.mapper
 
 import com.example.gamesshare.domain.models.GamesModel
 import com.example.gamesshare.domain.models.RatingsValuesDomain
+import com.example.gamesshare.domain.models.ShortScreenShotsDomain
 import com.example.gamesshare.domain.network.api.data.dto.GameListDTO
 
 
@@ -11,7 +12,7 @@ class GamesDTOMapper {
             game.idGame,
             game.nameGame,
             game.backgroundImage,
-            game.ratingGlobal,
+            game.metacritic,
             game.top,
             ratings = game.ratings.map { ratingDto ->
                 RatingsValuesDomain(
@@ -23,13 +24,12 @@ class GamesDTOMapper {
             slug = game.slug,
             platforms = game.platforms.map {
                 it.platform.name
-            }.distinctBy { it.substringBefore(" ") }.filter {
-               it.contains("PC")
-                       || it.contains("PlayStation")
-                       || it.contains("Xbox")
-                       || it.contains("Nintendo")
-                       || it.contains("Android")
-                       || it.contains("Apple")
+            },
+            short_screenshots = game.short_screenshots.map {
+                ShortScreenShotsDomain(image = it.image)
+            },
+            allPlatforms = game.allPlatforms.map {
+                it.platform.name
             }
         )
     }

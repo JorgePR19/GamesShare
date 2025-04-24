@@ -125,4 +125,6 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer-hls:1.5.0") // [Optional] If your media item is HLS (m3u8..)
     implementation("androidx.media3:media3-exoplayer-smoothstreaming:1.5.0") // [Optional] If your media item is smoothStreaming
 
+    //icons
+    implementation(libs.androidx.material.icons.extended)
 }

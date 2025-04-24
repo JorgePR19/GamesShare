@@ -10,11 +10,13 @@ data class GamesModel(
     val gameId: Int,
     val gameName: String,
     val backgroundImage: String,
-    val ratingGlobal: Double,
+    val metacritic: Int,
     val top: Int,
     val ratings: List<RatingsValuesDomain>,
     val slug: String,
-    val platforms: List<String>
+    val platforms: List<String>,
+    val allPlatforms: List<String>,
+    val short_screenshots: List<ShortScreenShotsDomain>
 ):Parcelable
 
 @Parcelize
@@ -23,4 +25,10 @@ data class RatingsValuesDomain(
     val title: String,
     val votes: Int,
     val percent: Double,
+):Parcelable
+
+@Parcelize
+@Serializable
+data class ShortScreenShotsDomain(
+   val image: String
 ):Parcelable

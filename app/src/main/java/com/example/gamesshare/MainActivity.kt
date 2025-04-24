@@ -19,8 +19,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            //HomeMovieMediaScreen()
-
             GamesShareTheme {
                 NavGraphComposeView(sharePreferenceViewModel)
                 DsWidgetLoader()
