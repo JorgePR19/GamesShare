@@ -1,11 +1,17 @@
 package com.example.gamesshare
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gamesshare.domain.local.DataStorePref
 import com.example.gamesshare.domain.local.SharePreference
+import com.example.gamesshare.domain.models.DataMovie
+import com.example.gamesshare.domain.models.GameMovieModel
+import com.example.gamesshare.domain.models.GamesModel
 import com.example.gamesshare.domain.network.ResponseStatus
 import com.example.gamesshare.domain.network.firebase.domain.login.FetchUserUserCase
 import com.example.gamesshare.ui.view.navigation.HomeDestination
@@ -28,6 +34,8 @@ class SharePreferenceViewModel @Inject constructor(
     val email = dataStorePref.getEmail
     val userName = dataStorePref.getUserName
     val userImage = dataStorePref.getUserImage
+
+    var listMovies: List<GameMovieModel> = emptyList()
 
     private val _state = MutableLiveData<ResponseStatus<Any>>()
     val state: LiveData<ResponseStatus<Any>> = _state
